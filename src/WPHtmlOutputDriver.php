@@ -5,6 +5,8 @@ namespace tad\WP\Snapshots;
 use PHPUnit\Framework\Assert;
 use Spatie\Snapshots\Drivers\VarDriver;
 
+/** @noinspection SpellCheckingInspection */
+
 /**
  * Class WPHtmlOutputDriver
  *
@@ -44,6 +46,7 @@ class WPHtmlOutputDriver extends VarDriver {
 	 *            snapshot code.
 	 */
 	protected $urlAttributes = ['href', 'src'];
+	/** @noinspection SpellCheckingInspection */
 
 	/**
 	 * @var array An array of keys used in `id` and `name` attributes by WordPress
@@ -72,7 +75,7 @@ class WPHtmlOutputDriver extends VarDriver {
 	 *                                 URLs only.
 	 */
 	public function __construct(string $currentUrl = '', string $snapshotUrl = null) {
-		$this->currentUrl  = $currentUrl;
+		$this->currentUrl = $currentUrl;
 		$this->snapshotUrl = $snapshotUrl;
 	}
 
@@ -90,9 +93,9 @@ class WPHtmlOutputDriver extends VarDriver {
 		$evaluated = $this->evalCode($expected);
 
 		$normalizedExpected = $this->normalizeHtml($this->removeTimeValues($this->replaceUrls($evaluated)));
-		$normalizedActual   = $this->normalizeHtml($this->removeTimeValues($actual));
+		$normalizedActual = $this->normalizeHtml($this->removeTimeValues($actual));
 
-		if (!empty($this->tolerableDifferences)) {
+		if ( ! empty($this->tolerableDifferences)) {
 			$normalizedActual = $this->applyTolerableDifferences($normalizedExpected, $normalizedActual);
 		}
 
@@ -132,15 +135,10 @@ class WPHtmlOutputDriver extends VarDriver {
 		$doc = \phpQuery::newDocument($input);
 
 		foreach ($this->urlAttributes as $name) {
-			$selector = empty($this->snapshotUrl) ?
-				"*[{$name}]"
-				: "*[{$name}^='{$this->snapshotUrl}']";
+			$selector = empty($this->snapshotUrl) ? "*[{$name}]" : "*[{$name}^='{$this->snapshotUrl}']";
 			$doc->find($selector)->each(function (\DOMElement $t) use ($name) {
-				$current     = $t->getAttribute($name);
-				$snapshotUrl = sprintf('%s://%s',
-					parse_url($current, PHP_URL_SCHEME),
-					parse_url($current, PHP_URL_HOST)
-				);
+				$current = $t->getAttribute($name);
+				$snapshotUrl = sprintf('%s://%s', parse_url($current, PHP_URL_SCHEME), parse_url($current, PHP_URL_HOST));
 
 				if ($port = parse_url($current, PHP_URL_PORT)) {
 					$snapshotUrl .= ":{$port}";
@@ -163,11 +161,11 @@ class WPHtmlOutputDriver extends VarDriver {
 		$actualNoDelims = preg_replace('/[^A-Za-z0-9]/', ' ', str_replace($actualDelims, ' ', $actual));
 
 		$expectedFrags = array_map('trim', array_filter(explode(' ', $expectedNoDelims)));
-		$actualFrags   = array_map('trim', array_filter(explode(' ', $actualNoDelims)));
+		$actualFrags = array_map('trim', array_filter(explode(' ', $actualNoDelims)));
 
 		$tolerated = [];
 		foreach ($actualFrags as $i => $value) {
-			if (!isset($expectedFrags[$i])) {
+			if ( ! isset($expectedFrags[$i])) {
 				continue;
 			}
 			if ($actualFrags[$i] == $expectedFrags[$i]) {
@@ -188,9 +186,7 @@ class WPHtmlOutputDriver extends VarDriver {
 				return preg_quote($post, '/');
 			}, $this->postfixes);
 
-			$findPattern = '(' . implode('|', $prefixes) . ')*'
-				. preg_quote($find, '/')
-				. '(' . implode('|', $postfixes) . ')*';
+			$findPattern = '(' . implode('|', $prefixes) . ')*' . preg_quote($find, '/') . '(' . implode('|', $postfixes) . ')*';
 
 			$pattern = '/(?<![\\w\\d])' . $findPattern . '(?![\\w\\d])/';
 

@@ -28,6 +28,8 @@
     "psr-4": {
       "tad\\WP\\Snapshots\\": "tests/"
     },
-    "files": ["tests/utils.php"]
+    "files": [
+      "tests/utils.php"
+    ]
   }
 }
