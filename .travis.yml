@@ -5,4 +5,8 @@ php:
   - '7.2'
   - nightly
 
-  install: composer update
+  install:
+    - composer update
+
+  script:
+    - phpunit
