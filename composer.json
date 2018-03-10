@@ -1,5 +1,5 @@
 {
-  "name": "luca/wp-snaphot-assertions",
+  "name": "lucatume/wp-snaphot-assertions",
   "description": "A set of utilities to support snapshot testing of WordPress code.",
   "keywords": [
     "wordpress",
