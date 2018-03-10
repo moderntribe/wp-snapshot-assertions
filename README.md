@@ -2,7 +2,7 @@
 
 *Snapshot testing of WordPress code for PHPUnit, based on the [PHPUnit Snapshot Assertions package by Spatie](https://github.com/spatie/phpunit-snapshot-assertions).*
 
-https://travis-ci.org/lucatume/wp-snapshot-assertions.svg?branch=master
+[![Build Status](https://travis-ci.org/lucatume/wp-snapshot-assertions.svg?branch=master)](https://travis-ci.org/lucatume/wp-snapshot-assertions)
 
 ## Installation
 ```bash
