@@ -244,4 +244,20 @@ class WPHtmlOutputDriverTest extends TestCase {
 
 		$driver->match($expected, $driver->evalCode($actual));
 	}
+
+	/**
+	 * It should be able to match a complex URL
+	 *
+	 * @test
+	 */
+	public function should_be_able_to_match_a_complex_url() {
+		$file = 'html-3';
+		$one = $two = $this->getSourceFileContents($file);
+
+		$this->currentUrl = 'http://test.foo.bar';
+		$two = $this->replaceExampleUrlIn($two);
+		$driver = $this->make_instance();
+
+		$driver->match($one, $driver->evalCode($two));
+	}
 }
