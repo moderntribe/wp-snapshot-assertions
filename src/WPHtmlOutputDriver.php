@@ -49,6 +49,12 @@ class WPHtmlOutputDriver extends VarDriver {
 	/** @noinspection SpellCheckingInspection */
 
 	/**
+	 * @var array An array of keys to identify time-dependent attributes that hold
+	 *            unique/time-dependent data values.
+	 */
+	protected $timeDependentAttributes = [];
+
+	/**
 	 * @var array An array of keys used in `id` and `name` attributes by WordPress
 	 *            to identify time-dependent values like nonces.
 	 */
@@ -92,8 +98,8 @@ class WPHtmlOutputDriver extends VarDriver {
 	public function match($expected, $actual) {
 		$evaluated = $this->evalCode($expected);
 
-		$normalizedExpected = $this->normalizeHtml($this->removeTimeValues($this->replaceUrls($evaluated)));
-		$normalizedActual = $this->normalizeHtml($this->removeTimeValues($actual));
+		$normalizedExpected = $this->normalizeHtml($this->removeTimeAttributes($this->removeTimeValues($this->replaceUrls($evaluated))));
+		$normalizedActual = $this->normalizeHtml($this->removeTimeAttributes($this->removeTimeValues($actual)));
 
 		if ( ! empty($this->tolerableDifferences)) {
 			$normalizedActual = $this->applyTolerableDifferences($normalizedExpected, $normalizedActual);
@@ -117,6 +123,18 @@ class WPHtmlOutputDriver extends VarDriver {
 		$doc = \phpQuery::newDocument($input);
 
 		return $doc->__toString();
+	}
+
+	protected function removeTimeAttributes(string $input): string {
+		$doc = \phpQuery::newDocument($input);
+
+		foreach ($this->timeDependentAttributes as $name) {
+			$doc->find("*[{$name}]")->each(function (\DOMElement $t) use ($name) {
+				$t->setAttribute($name, '');
+			});
+		}
+
+		return $this->normalizeHtml($doc->__toString());
 	}
 
 	protected function removeTimeValues(string $input): string {
@@ -196,6 +214,26 @@ class WPHtmlOutputDriver extends VarDriver {
 		}
 
 		return $actual;
+	}
+
+	/**
+	 * Returns an array that the driver will use to identify and void
+	 * by attribute name time-dependent values like data attributes.
+	 *
+	 * @return array
+	 */
+	public function getTimeDependentAttributes(): array {
+		return $this->timeDependentAttributes;
+	}
+
+	/**
+	 * Sets the array that the driver will use to identify and void
+	 * by attribute name time-dependent values like data attributes.
+	 *
+	 * @param array $timeDependentAttributes
+	 */
+	public function setTimeDependentAttributes(array $timeDependentAttributes) {
+		$this->timeDependentAttributes = $timeDependentAttributes;
 	}
 
 	/**
