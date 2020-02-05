@@ -1,5 +1,5 @@
 {
-  "name": "moderntribe/wp-snaphot-assertions",
+  "name": "moderntribe/wp-snapshot-assertions",
   "description": "A set of utilities to support snapshot testing of WordPress code.",
   "keywords": [
     "wordpress",
