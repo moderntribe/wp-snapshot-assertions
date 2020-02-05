@@ -38,7 +38,7 @@ class MySnapshotTest extends \Codeception\TestCase\WPTestCase {
 		$postId= $this->factory->post->create();
 		
 		$renderedHtml = $sut->renderHtmlFor($postId);
-      		$driver->setTolerableDifferences([$postId]);
+		$driver->setTolerableDifferences([$postId]);
 		$driver->setTolerableDifferencesPrefixes(['post_', 'post-']);
 		$driver->setTolerableDifferencesPostfixes(['-single', '-another-postfix']);
 		
@@ -47,9 +47,12 @@ class MySnapshotTest extends \Codeception\TestCase\WPTestCase {
 }
 ```
 
-By default the driver will lok for time-dependent fields with an `id`, `name` or `class` from a default list (e.g. `_wpnonce`); you might want to add or modify that list using the `WPHtmlOutputDriver::setTimeDependentKeys` method.  
-On the same note, the driver will look for some attributes when looking to replace the snapshot URL with the current URL; you can modify those using the `WPHtmlOutputDriver::setUrlAttributes` method.  
-Very often WordPress HTML will contain attributes and strings that will inline post IDs, titles and other fields; in general the comparison of the snapshots should not fail because the random post ID used when the snapshot was generated was `23` but it's, in another test run, `89`.  
+By default the driver will lok for time-dependent fields with an `id`, `name` or `class` from a default list (e.g. `_wpnonce`); you might want to add or modify that list using the `WPHtmlOutputDriver::setTimeDependentKeys` method.
+
+On the same note, the driver will look for some attributes when looking to replace the snapshot URL with the current URL; you can modify those using the `WPHtmlOutputDriver::setUrlAttributes` method.
+
+Very often WordPress HTML will contain attributes and strings that will inline post IDs, titles and other fields; in general the comparison of the snapshots should not fail because the random post ID used when the snapshot was generated was `23` but it's, in another test run, `89`.
+
 To avoid that use the `WPHtmlOutputDriver::setTolerableDifferences` method to define what values defined in the current test run should not trigger a failure (see example above); furthermore run-dependent variables could be used to construct `id`, `class`, `data` and other attributes: if you know that the rendered HTML will contain something like this (where `23` is the post ID):
 
 ```html
@@ -64,5 +67,12 @@ You might want to say to the driver that the current post ID is a tolerable diff
 $driver->setTolerableDifferences([$currentPostId]);
 $driver->setTolerableDifferencesPrefixes(['prefix-']);
 $driver->setTolerableDifferencesPostfixes(['-postfix']);
+$this->assertMatchesSnapshot($renderedHtml, $driver);
+```
+
+When HTML attributes contain truly unique or time-dependent values, those attributes can be excluded completely using the `WPHtmlOutputDriver::setTimeDependentAttributes` method.
+
+```php
+$driver->setTimeDependentAttributes(['data-uuid']);
 $this->assertMatchesSnapshot($renderedHtml, $driver);
 ```
