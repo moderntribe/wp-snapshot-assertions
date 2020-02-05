@@ -260,4 +260,22 @@ class WPHtmlOutputDriverTest extends TestCase {
 
 		$driver->match($one, $driver->evalCode($two));
 	}
+
+	/**
+	 * It should be able to match a time dependent attribute
+	 *
+	 * @test
+	 */
+	public function should_be_able_to_match_a_time_dependent_attribute() {
+		$template = $this->getSourceFileContents('html-10');
+
+		$driver = new Driver();
+
+		$actual = str_replace(['{{one}}', '{{two}}'], ['23', '89'], $template);
+		$expected = str_replace(['{{one}}', '{{two}}'], ['foo', 'bar'], $template);
+
+		$driver->setTimeDependentAttributes(['data-id']);
+
+		$driver->match($expected, $driver->evalCode($actual));
+	}
 }
