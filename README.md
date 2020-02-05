@@ -73,6 +73,6 @@ $this->assertMatchesSnapshot($renderedHtml, $driver);
 When HTML attributes contain truly unique or time-dependent values, those attributes can be excluded completely using the `WPHtmlOutputDriver::setTimeDependentAttributes` method.
 
 ```php
-$driver->setTimeDependentAttributes(['data-uuid']);
+$driver->setTimeDependentAttributes(['data-one']);
 $this->assertMatchesSnapshot($renderedHtml, $driver);
 ```
